@@ -5,36 +5,52 @@ import { verifyAccessToken } from "../utils/jwt.js";
 import { AppError } from "../utils/app-error.js";
 
 export const protect = async (
-    req: Request,
-    _res: Response,
-    next: NextFunction
+  req: Request,
+  _res: Response,
+  next: NextFunction
 ): Promise<void> => {
-    try {
-        const authHeader = req.headers.authorization;
+  try {
+    const authHeader = req.headers.authorization;
 
-        if (!authHeader?.startsWith("Bearer ")) {
-            throw new AppError("Unauthorized", 401);
-        }
-
-        const token = authHeader.split(" ")[1];
-
-        if (!token) {
-            throw new AppError("Unauthorized", 401);
-        }
-
-        const payload = verifyAccessToken(token);
-
-        const user = await User.findById(payload.userId);
-
-        if (!user) {
-            throw new AppError("User no longer exists", 401);
-        }
-
-        req.user = user;
-
-        next();
-    } catch (error) {
-        console.error(error);
-        next(new AppError("Unauthorized", 401));
+    if (!authHeader?.startsWith("Bearer ")) {
+      throw new AppError("Unauthorized", 401);
     }
+
+    const token = authHeader.split(" ")[1];
+
+    if (!token) {
+      throw new AppError("Unauthorized", 401);
+    }
+
+    const payload = verifyAccessToken(token);
+
+    const user = await User.findById(
+      payload.userId
+    );
+
+    if (!user) {
+      throw new AppError(
+        "User no longer exists",
+        401
+      );
+    }
+
+    req.user = {
+      id: user.id,
+      role: user.role,
+      email: user.email,
+    };
+
+    next();
+
+  } catch (error) {
+    console.error(error);
+
+    next(
+      new AppError(
+        "Unauthorized",
+        401
+      )
+    );
+  }
 };

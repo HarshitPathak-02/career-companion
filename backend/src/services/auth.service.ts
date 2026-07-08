@@ -1,4 +1,6 @@
-import { Session } from "../models/session.models.js";
+import mongoose from "mongoose";
+import { Profile } from "../models/profile.model.js";
+import { Session } from "../models/session.model.js";
 import { User } from "../models/user.model.js";
 import { AppError } from "../utils/app-error.js";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
@@ -7,33 +9,56 @@ import type { LoginInput, LogoutInput, RefreshTokenInput, RegisterInput } from "
 
 export class AuthService {
     static async register(data: RegisterInput) {
-        // Check if email already exists
-        const existingUser = await User.findOne({
-            email: data.email,
-        });
+        const session = await mongoose.startSession();
 
-        if (existingUser) {
-            throw new AppError(
-                "Email already registered",
-                409
+        try {
+            session.startTransaction();
+
+            const users = await User.create(
+                [
+                    {
+                        fullName: data.fullName,
+                        email: data.email,
+                        password: data.password,
+                    },
+                ],
+                { session }
             );
+
+            const user = users[0];
+
+            if(!user) {
+                throw new AppError(
+                    "User creation failed",
+                    500
+                );
+            }
+
+            await Profile.create(
+                [
+                    {
+                        userId: user._id,
+                    },
+                ],
+                { session }
+            );
+
+            await session.commitTransaction();
+
+            return {
+                id: user.id,
+                fullName: user.fullName,
+                email: user.email,
+                role: user.role,
+                isEmailVerified: user.isEmailVerified,
+                profileCompleted: user.profileCompleted,
+            };
+        } catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } finally {
+            session.endSession();
         }
-
-        // Create user
-        const user = await User.create({
-            fullName: data.fullName,
-            email: data.email,
-            password: data.password,
-        });
-
-        return {
-            id: user.id,
-            fullName: user.fullName,
-            email: user.email,
-            role: user.role,
-            isEmailVerified: user.isEmailVerified,
-            profileCompleted: user.profileCompleted,
-        };
     }
 
     static async login(data: LoginInput) {

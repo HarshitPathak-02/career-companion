@@ -61,7 +61,7 @@ export const logoutAll = asyncHandler(
   async (req: Request, res: Response) => {
 
     await AuthService.logoutAll(
-      req.user!.id
+      req.user.id
     );
 
     return res.status(200).json(

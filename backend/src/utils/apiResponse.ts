@@ -2,6 +2,20 @@ export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;
+  pagination?: PaginationMeta;
+  errors?: unknown;
+}
+
+export interface PaginationMeta {
+
+  page: number;
+
+  limit: number;
+
+  total: number;
+
+  pages: number;
+
 }
 
 export const successResponse = <T>(
@@ -30,3 +44,19 @@ export const errorResponse = (
     message,
   };
 };
+
+export const paginatedResponse = <T>(
+  message: string,
+  data: T,
+  pagination: PaginationMeta
+) => {
+
+  return {
+    success: true,
+    message,
+    data,
+    pagination,
+  };
+
+};
+
