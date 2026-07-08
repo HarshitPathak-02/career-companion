@@ -22,3 +22,21 @@ export const generateRefreshToken = (
     expiresIn: jwtConfig.refreshTokenExpiresIn as JwtExpiry,
   });
 };
+
+export const verifyAccessToken = (
+  token: string
+): JwtPayload => {
+  return jwt.verify(
+    token,
+    jwtConfig.accessTokenSecret
+  ) as JwtPayload;
+};
+
+export const verifyRefreshToken = (
+  token: string
+): JwtPayload => {
+  return jwt.verify(
+    token,
+    jwtConfig.refreshTokenSecret
+  ) as JwtPayload;
+};

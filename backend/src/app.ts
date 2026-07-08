@@ -8,6 +8,7 @@ import { requestLogger } from "./middlewares/requestLogger.js";
 import { notFound } from "./middlewares/notFound.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import routes from "./routes/index.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(rateLimiter);
 
 app.use("/api/v1", routes);
+app.use("/api/v1/auth", authRoutes);
 
 app.use(notFound);
 

@@ -7,6 +7,7 @@ import {
 import { USER_ROLES } from "../constants/roles.js";
 
 import bcrypt from "bcrypt";
+import { hashPassword } from "../utils/password.js";
 
 const userSchema = new Schema<IUser, UserModel, UserMethods>(
     {
@@ -77,7 +78,7 @@ userSchema.pre("save", async function () {
         return;
     }
 
-    this.password = await bcrypt.hash(this.password, 12);
+   this.password = await hashPassword(this.password);
 
 });
 

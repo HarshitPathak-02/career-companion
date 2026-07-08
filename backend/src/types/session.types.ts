@@ -1,7 +1,7 @@
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 
 export interface ISession {
-  userId: string;
+  userId: Types.ObjectId;
 
   refreshToken: string;
 
