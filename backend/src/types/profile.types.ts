@@ -1,12 +1,38 @@
 import { HydratedDocument, Types } from "mongoose";
 
-export interface ISkill {
+export interface ILanguage {
     name: string;
-    level: "Beginner" | "Intermediate" | "Advanced";
-    yearsOfExperience: number;
+
+    proficiency:
+        | "Beginner"
+        | "Intermediate"
+        | "Professional"
+        | "Native";
+}
+
+export interface ISocialLinks {
+
+    github?: string;
+
+    linkedin?: string;
+
+    portfolio?: string;
+
+    leetcode?: string;
+
+    codeforces?: string;
+
+    codechef?: string;
+
+    hackerrank?: string;
+
+    geeksforgeeks?: string;
+
+    x?: string;
 }
 
 export interface IProfile {
+
     userId: Types.ObjectId;
 
     headline?: string;
@@ -21,16 +47,12 @@ export interface IProfile {
 
     location?: string;
 
-    linkedinUrl: string,
+    languages: ILanguage[];
 
-
-    githubUrl: string,
-
-    portfolioUrl: string,
-
-    resumeUrl: string,
+    socialLinks: ISocialLinks;
 
     profileCompletion: number;
 }
 
-export type ProfileDocument = HydratedDocument<IProfile>;
+export type ProfileDocument =
+    HydratedDocument<IProfile>;
