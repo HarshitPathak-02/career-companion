@@ -6,6 +6,8 @@ import { AppError } from "../utils/app-error.js";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
 import { comparePassword } from "../utils/password.js";
 import type { LoginInput, LogoutInput, RefreshTokenInput, RegisterInput } from "../validations/auth.validation.js";
+import { NotificationService } from "./notification.service.js";
+import { ActivityService } from "./activity.service.js";
 
 export class AuthService {
     static async register(data: RegisterInput) {
@@ -27,7 +29,7 @@ export class AuthService {
 
             const user = users[0];
 
-            if(!user) {
+            if (!user) {
                 throw new AppError(
                     "User creation failed",
                     500
@@ -43,7 +45,25 @@ export class AuthService {
                 { session }
             );
 
+
             await session.commitTransaction();
+
+            await NotificationService.createNotification({
+                userId: user.id,
+                title: "Welcome to Career Companion!",
+                message:
+                    "Your account has been created successfully. Complete your profile to unlock personalized career recommendations.",
+                type: "system",
+            });
+
+            await ActivityService.log({
+                userId: user.id,
+                action: "CREATE",
+                entity: "USER",
+                metadata: {
+                    email: user.email,
+                },
+            });
 
             return {
                 id: user.id,
@@ -108,9 +128,16 @@ export class AuthService {
         });
 
         user.lastLogin = new Date();
+
         user.refreshToken = refreshToken;
 
         await user.save();
+
+        await ActivityService.log({
+            userId: user.id,
+            action: "LOGIN",
+            entity: "USER",
+        });
 
         return {
             user: {
@@ -180,6 +207,12 @@ export class AuthService {
             }
         );
 
+        await ActivityService.log({
+            userId: session.userId.toString(),
+            action: "LOGOUT",
+            entity: "USER",
+        });
+
         return null;
     }
 
@@ -198,6 +231,15 @@ export class AuthService {
 
         await User.findByIdAndUpdate(userId, {
             refreshToken: undefined,
+        });
+
+        await ActivityService.log({
+            userId,
+            action: "LOGOUT",
+            entity: "USER",
+            metadata: {
+                allDevices: true,
+            },
         });
 
         return null;

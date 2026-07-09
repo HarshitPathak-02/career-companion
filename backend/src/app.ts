@@ -17,6 +17,13 @@ import projectRoutes from "./routes/project.routes.js";
 import certificationRoutes from "./routes/certification.routes.js";
 import achievementRoutes from "./routes/achievement.routes.js";
 import uploadRoutes from "./routes/upload.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
+import activityRoutes from "./routes/activity.routes.js";
+import resumeRoutes from "./routes/resume.routes.js";
+import atsRoutes from "./routes/ats.routes.js";
+import interviewRoutes from "./routes/interview.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
+import careerAIRoutes from "./modules/career-ai/routes/career-ai.routes.js";
 
 const app = express();
 
@@ -54,6 +61,41 @@ app.use(
 app.use(
     "/api/v1/upload",
     uploadRoutes
+);
+
+app.use(
+    "/api/v1/notifications",
+    notificationRoutes
+);
+
+app.use(
+    "/api/v1/activities",
+    activityRoutes
+);
+
+app.use(
+    "/api/v1/resumes",
+    resumeRoutes
+);
+
+app.use("/api/v1/ats", atsRoutes);
+
+app.use(
+    "/api/v1/interviews",
+    interviewRoutes
+);
+
+app.use(
+    "/api/v1/dashboard",
+    dashboardRoutes
+);
+
+app.use(
+
+    "/api/v1/career-ai",
+
+    careerAIRoutes
+
 );
 
 app.use(notFound);

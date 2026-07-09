@@ -24,4 +24,11 @@ export const env = {
 
     CLOUDINARY_API_SECRET:
         getEnv("CLOUDINARY_API_SECRET"),
+
+    AI_PROVIDER:
+        getEnv("AI_PROVIDER"),
+    OPENAI_API_KEY:
+        getEnv("OPENAI_API_KEY"),
+    GEMINI_API_KEY:
+        getEnv("GEMINI_API_KEY"),
 };
