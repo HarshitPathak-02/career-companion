@@ -15,6 +15,8 @@ import type {
 
 import { NotificationService } from "./notification.service.js";
 import { ActivityService } from "./activity.service.js";
+import { ResumeService } from "./resume.service.js";
+import { ResumeAIEngine } from "./resumeAI.service.js";
 
 
 export class ATSService {
@@ -50,71 +52,20 @@ export class ATSService {
 
     static async analyzeResume(
         userId: string,
-        data: AnalyzeATSRequestInput
+        data: AnalyzeATSRequestInput,
     ) {
 
-
         const resume =
-            await this.validateResumeOwnership(
+            await ResumeService.getPopulatedResume(
                 userId,
-                data.resumeId
+                data.resumeId,
             );
 
-
-
-        /*
-            ATS ENGINE PLACEHOLDER
-
-            Later this will include:
-
-            - Resume text extraction
-            - Keyword matching
-            - Skill comparison
-            - AI suggestions
-
-        */
-
-
-        const matchedSkills: string[] = [];
-
-        const missingSkills: string[] = [
-
-            "Docker",
-            "AWS"
-
-        ];
-
-
-
-        const keywordScore = 75;
-
-        const experienceScore = 80;
-
-        const formattingScore = 85;
-
-
-        const score =
-            Math.round(
-                (
-                    keywordScore +
-                    experienceScore +
-                    formattingScore
-                ) / 3
+        const analysis =
+            await ResumeAIEngine.analyzeResume(
+                resume,
+                data.jobDescription,
             );
-
-
-
-        const suggestions = [
-
-            "Add more measurable achievements in projects.",
-
-            "Include missing job-specific keywords.",
-
-            "Improve technical skill coverage."
-
-        ];
-
-
 
         const report =
             await ATSReport.create({
@@ -127,27 +78,28 @@ export class ATSService {
                 jobDescription:
                     data.jobDescription,
 
+                score:
+                    analysis.score,
 
-                score,
+                matchedSkills:
+                    analysis.matchedSkills,
 
+                missingSkills:
+                    analysis.missingSkills,
 
-                matchedSkills,
+                keywordScore:
+                    analysis.keywordScore,
 
-                missingSkills,
+                experienceScore:
+                    analysis.experienceScore,
 
+                formattingScore:
+                    analysis.formattingScore,
 
-                keywordScore,
-
-                experienceScore,
-
-                formattingScore,
-
-
-                suggestions,
+                suggestions:
+                    analysis.suggestions,
 
             });
-
-
 
         await NotificationService.createNotification({
 
@@ -171,8 +123,6 @@ export class ATSService {
 
         });
 
-
-
         await ActivityService.log({
 
             userId,
@@ -194,8 +144,6 @@ export class ATSService {
             },
 
         });
-
-
 
         return report;
 

@@ -83,5 +83,29 @@ export interface IResume {
     updatedAt?: Date;
 }
 
+export interface SkillGapRequest {
+
+    resumeId: string;
+
+    targetRole: string;
+
+}
+
+export interface SkillGapResponse {
+
+    overallReadiness: number;
+
+    currentSkills: string[];
+
+    missingSkills: string[];
+
+    recommendedProjects: string[];
+
+    learningRoadmap: string[];
+
+    estimatedTimeline: string;
+
+}
+
 export type ResumeDocument =
     HydratedDocument<IResume>;

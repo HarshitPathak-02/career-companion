@@ -22,7 +22,10 @@ export type ActivityEntity =
     | "ATS"
     | "JOB"
     | "USER"
-    | "ATS_REPORT";
+    | "ATS_REPORT"
+    | "SKILL_GAP"
+    | "RESUME_REVIEW"
+    | "INTERVIEW_PREPARATION"
 
 export interface IActivity {
 

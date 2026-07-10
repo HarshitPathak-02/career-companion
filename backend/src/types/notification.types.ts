@@ -6,7 +6,8 @@ export type NotificationType =
     | "resume"
     | "job"
     | "ats"
-    | "ai";
+    | "ai"
+    | "skill-gap";
 
 export interface INotification {
 

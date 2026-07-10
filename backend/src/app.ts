@@ -24,6 +24,10 @@ import atsRoutes from "./routes/ats.routes.js";
 import interviewRoutes from "./routes/interview.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import careerAIRoutes from "./modules/career-ai/routes/career-ai.routes.js";
+import skillGapRoutes from "./routes/skillGap.routes.js";
+import resumeReviewRoutes from "./routes/resumeReview.routes.js";
+import interviewAIRoutes from "./routes/interviewAI.routes.js";
+import coverLetterRoutes from "./routes/coverLetter.routes.js";
 
 const app = express();
 
@@ -91,10 +95,30 @@ app.use(
 );
 
 app.use(
-
     "/api/v1/career-ai",
-
     careerAIRoutes
+);
+
+app.use(
+    "/api/v1/skill-gap",
+    skillGapRoutes,
+);
+
+app.use(
+    "/api/v1/resume-review",
+    resumeReviewRoutes,
+);
+
+app.use(
+    "/api/v1/interview-ai",
+    interviewAIRoutes
+);
+
+app.use(
+
+    "/api/v1/cover-letter",
+
+    coverLetterRoutes
 
 );
 

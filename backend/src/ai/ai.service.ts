@@ -1,72 +1,43 @@
+import { AIFactory } from "./ai.factory.js";
+import { AICompletionResponse } from "./ai.types.js";
 import {
-    AIFactory,
-} from "./ai.factory.js";
+    AIProvider,
+    OpenAIProvider,
+} from "./providers/index.js";
 
-
-import {
-    AIError,
-} from "./ai.error.js";
-
-
-import type {
-
-    AICompletionOptions,
-
-    AIMessage,
-
-} from "./ai.types.js";
-
-
-
+import { AICompletionOptions, AIMessage } from "./ai.types.js";
 
 export class AIService {
 
+    private static provider: AIProvider =
+        AIFactory.getProvider();
 
+    static setProvider(
+        provider: AIProvider
+    ): void {
 
-    static async generate(
-
-        messages: AIMessage[],
-
-        options?: AICompletionOptions
-
-    ) {
-
-
-        const provider =
-            AIFactory.getProvider();
-
-
-
-        const response =
-            await provider.generate({
-
-                messages,
-
-
-                ...(options && {
-
-                    options,
-
-                }),
-
-
-            });
-
-
-
-        if(!response.content){
-
-            throw new AIError(
-                "AI failed to generate response"
-            );
-
-        }
-
-
-
-        return response;
+        this.provider = provider;
 
     }
 
+    static async complete(
+
+        messages: AIMessage[],
+
+        options?: AICompletionOptions,
+
+    ): Promise<AICompletionResponse> {
+
+        return this.provider.complete({
+
+            messages,
+
+            ...(options
+                ? { options }
+                : {}),
+
+        });
+
+    }
 
 }

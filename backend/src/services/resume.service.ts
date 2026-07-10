@@ -22,6 +22,7 @@ import type {
 
 import { NotificationService } from "./notification.service.js";
 import { ActivityService } from "./activity.service.js";
+import { PopulatedResume } from "../types/resumeAI.types.js";
 
 export class ResumeService {
 
@@ -521,8 +522,8 @@ export class ResumeService {
 
     static async getPopulatedResume(
         userId: string,
-        resumeId: string
-    ) {
+        resumeId: string,
+    ): Promise<PopulatedResume> {
 
         const resume =
             await Resume.findOne({
@@ -539,11 +540,11 @@ export class ResumeService {
         if (!resume) {
             throw new AppError(
                 "Resume not found",
-                404
+                404,
             );
         }
 
-        return resume;
+        return resume as unknown as PopulatedResume;
 
     }
 

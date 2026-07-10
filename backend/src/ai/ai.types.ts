@@ -8,9 +8,9 @@ export type AIProviderName =
 export interface AIMessage {
 
     role:
-        | "system"
-        | "user"
-        | "assistant";
+    | "system"
+    | "user"
+    | "assistant";
 
     content: string;
 
@@ -44,6 +44,41 @@ export interface AICompletionResponse {
 
     provider: AIProviderName;
 
+    model: string;
+
     tokensUsed?: number;
 
 }
+
+// export interface InterviewPreparationResponse {
+
+//     technicalQuestions: string[];
+
+//     behavioralQuestions: string[];
+
+//     codingQuestions: string[];
+
+// }
+
+// export interface SkillGapResponse {
+
+//     currentSkills: string[];
+
+//     missingSkills: string[];
+
+//     learningRoadmap: string[];
+
+// }
+
+// export interface ResumeReviewResponse {
+
+//     strengths: string[];
+
+//     weaknesses: string[];
+
+//     suggestions: string[];
+
+// }
+
+export type AIJsonResponse =
+    Record<string, unknown>;

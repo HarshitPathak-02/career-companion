@@ -40,7 +40,10 @@ const activitySchema = new Schema<IActivity>(
                 "ATS",
                 "JOB",
                 "USER",
-                "ATS_REPORT"
+                "ATS_REPORT",
+                "SKILL_GAP",
+                "RESUME_REVIEW",
+                "INTERVIEW_PREPARATION"
             ],
             required: true,
         },

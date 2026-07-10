@@ -1,16 +1,17 @@
 export class AIError extends Error {
 
-
     constructor(
-        message:string
-    ){
+
+        message: string,
+
+        public readonly cause?: unknown,
+
+    ) {
 
         super(message);
 
-        this.name =
-            "AIError";
+        this.name = "AIError";
 
     }
-
 
 }

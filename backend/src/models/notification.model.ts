@@ -35,6 +35,7 @@ const notificationSchema =
                     "job",
                     "ats",
                     "ai",
+                    "skill-gap",
                 ],
                 default: "system",
             },

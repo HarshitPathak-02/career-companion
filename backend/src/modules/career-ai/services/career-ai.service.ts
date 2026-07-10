@@ -124,7 +124,7 @@ Return:
 
 
         const response =
-            await AIService.generate([
+            await AIService.complete([
 
 
                 {
